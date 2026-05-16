@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Savings Tracker</title>
+  <!-- Google Fonts: Syne (display) + Outfit (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Overlay untuk sidebar mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Toast Notifikasi -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toastIcon">✓</span>
+    <span class="toast-message" id="toastMessage">Transaksi berhasil ditambahkan!</span>
+  </div>
+
+  <div class="app-layout">
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">₿</div>
+        <div class="brand-text">
+          <span class="brand-name">Crypto</span>
+          <span class="brand-sub">Savings Tracker</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Menu Utama</div>
+        <ul class="nav-list" id="navList">
+          <li class="nav-item active" data-section="dashboard" data-title="Dashboard">
+            <span class="nav-icon">📊</span>
+            <span class="nav-text">Dashboard</span>
+          </li>
+          <li class="nav-item" data-section="tambah-transaksi" data-title="Tambah Transaksi">
+            <span class="nav-icon">➕</span>
+            <span class="nav-text">Tambah Transaksi</span>
+          </li>
+          <li class="nav-item" data-section="riwayat" data-title="Riwayat Transaksi">
+            <span class="nav-icon">📋</span>
+            <span class="nav-text">Riwayat</span>
+          </li>
+          <li class="nav-item" data-section="aset-saya" data-title="Aset Saya">
+            <span class="nav-icon">💼</span>
+            <span class="nav-text">Aset Saya</span>
+          </li>
+          <li class="nav-item" data-section="target" data-title="Target Tabungan">
+            <span class="nav-icon">🎯</span>
+            <span class="nav-text">Target Tabungan</span>
+          </li>
+          <li class="nav-item" data-section="laporan" data-title="Laporan">
+            <span class="nav-icon">📈</span>
+            <span class="nav-text">Laporan</span>
+          </li>
+          <li class="nav-item" data-section="pengaturan" data-title="Pengaturan">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-text">Pengaturan</span>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar-small">AS</div>
+          <div class="user-info">
+            <span class="user-name">Andi Setiawan</span>
+            <span class="user-role">Investor</span>
+          </div>
+        </div>
+      </div>
+    </aside><!-- end sidebar -->
+
+    <!-- ===================== MAIN CONTENT ===================== -->
+    <main class="main-content">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Sidebar">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="page-title-wrap">
+            <h1 class="page-title" id="pageTitle">Dashboard</h1>
+            <p class="page-subtitle">Pantau tabungan crypto Anda dengan lebih mudah</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Cari transaksi..." class="search-input" id="searchInput" />
+          </div>
+          <button class="btn btn-primary" onclick="scrollToSection('tambah-transaksi')">
+            + Tambah Transaksi
+          </button>
+          <button class="icon-btn" title="Notifikasi">
+            🔔
+            <span class="notif-badge">3</span>
+          </button>
+          <div class="user-avatar" title="Profil">AS</div>
+        </div>
+      </header>
+
+      <!-- CONTENT AREA -->
+      <div class="content-area">
+
+        <!-- ===== SECTION 1: DASHBOARD SUMMARY CARDS ===== -->
+        <section id="dashboard" class="section">
+          <div class="summary-cards">
+
+            <div class="summary-card card-anim" style="--delay: 0ms">
+              <div class="card-header">
+                <span class="card-label">Total Portofolio</span>
+                <span class="card-icon card-icon--primary">💰</span>
+              </div>
+              <div class="card-value" id="totalPortfolio">Rp 18.750.000</div>
+              <div class="card-change positive">▲ +12,5% dari bulan lalu</div>
+            </div>
+
+            <div class="summary-card card-anim" style="--delay: 80ms">
+              <div class="card-header">
+                <span class="card-label">Total Modal</span>
+                <span class="card-icon card-icon--accent">🏦</span>
+              </div>
+              <div class="card-value">Rp 15.000.000</div>
+              <div class="card-change neutral">Total investasi awal</div>
+            </div>
+
+            <div class="summary-card card-anim" style="--delay: 160ms">
+              <div class="card-header">
+                <span class="card-label">Profit / Loss</span>
+                <span class="card-icon card-icon--success">📈</span>
+              </div>
+              <div class="card-value positive" id="totalProfitLoss">+Rp 3.750.000</div>
+              <div class="card-change positive">▲ Return 25%</div>
+            </div>
+
+            <div class="summary-card card-anim" style="--delay: 240ms">
+              <div class="card-header">
+                <span class="card-label">Progress Target</span>
+                <span class="card-icon card-icon--warning">🎯</span>
+              </div>
+              <div class="card-value">62%</div>
+              <div class="card-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 62%"></div>
+                </div>
+                <span class="progress-text">Rp 18.75jt / Rp 30jt</span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ===== SECTION 2: CHARTS ===== -->
+        <section class="charts-section">
+          <div class="charts-grid">
+
+            <!-- Bar Chart: Perkembangan Tabungan -->
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <div>
+                  <h3 class="chart-title">Perkembangan Tabungan</h3>
+                  <p class="chart-subtitle">6 Bulan Terakhir (dalam juta Rp)</p>
+                </div>
+                <select class="chart-filter" aria-label="Filter periode">
+                  <option>6 Bulan</option>
+                  <option>3 Bulan</option>
+                  <option>1 Tahun</option>
+                </select>
+              </div>
+              <div class="bar-chart">
+                <div class="bar-chart-inner">
+                  <div class="bar-group">
+                    <div class="bar-wrap">
+                      <div class="bar" style="height:42%" data-value="Rp 8.4jt"></div>
+                    </div>
+                    <span class="bar-label">Des</span>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-wrap">
+                      <div class="bar" style="height:52%" data-value="Rp 9.7jt"></div>
+                    </div>
+                    <span class="bar-label">Jan</span>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-wrap">
+                      <div class="bar" style="height:60%" data-value="Rp 11.2jt"></div>
+                    </div>
+                    <span class="bar-label">Feb</span>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-wrap">
+                      <div class="bar" style="height:70%" data-value="Rp 13.1jt"></div>
+                    </div>
+                    <span class="bar-label">Mar</span>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-wrap">
+                      <div class="bar" style="height:83%" data-value="Rp 15.5jt"></div>
+                    </div>
+                    <span class="bar-label">Apr</span>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-wrap">
+                      <div class="bar active" style="height:100%" data-value="Rp 18.75jt"></div>
+                    </div>
+                    <span class="bar-label">Mei</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Allocation Chart -->
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <div>
+                  <h3 class="chart-title">Alokasi Aset</h3>
+                  <p class="chart-subtitle">Distribusi Portofolio Saat Ini</p>
+                </div>
+                <span class="badge badge--success">● Live</span>
+              </div>
+              <div class="allocation-chart">
+                <div class="alloc-item">
+                  <div class="alloc-header">
+                    <div class="alloc-coin">
+                      <span class="coin-dot coin-btc"></span>
+                      <span class="coin-name">Bitcoin (BTC)</span>
+                    </div>
+                    <span class="alloc-pct">40%</span>
+                  </div>
+                  <div class="alloc-bar"><div class="alloc-fill alloc-btc" style="width:40%"></div></div>
+                  <div class="alloc-value">≈ Rp 7.500.000</div>
+                </div>
+                <div class="alloc-item">
+                  <div class="alloc-header">
+                    <div class="alloc-coin">
+                      <span class="coin-dot coin-eth"></span>
+                      <span class="coin-name">Ethereum (ETH)</span>
+                    </div>
+                    <span class="alloc-pct">25%</span>
+                  </div>
+                  <div class="alloc-bar"><div class="alloc-fill alloc-eth" style="width:25%"></div></div>
+                  <div class="alloc-value">≈ Rp 4.687.500</div>
+                </div>
+                <div class="alloc-item">
+                  <div class="alloc-header">
+                    <div class="alloc-coin">
+                      <span class="coin-dot coin-sol"></span>
+                      <span class="coin-name">Solana (SOL)</span>
+                    </div>
+                    <span class="alloc-pct">20%</span>
+                  </div>
+                  <div class="alloc-bar"><div class="alloc-fill alloc-sol" style="width:20%"></div></div>
+                  <div class="alloc-value">≈ Rp 3.750.000</div>
+                </div>
+                <div class="alloc-item">
+                  <div class="alloc-header">
+                    <div class="alloc-coin">
+                      <span class="coin-dot coin-usdt"></span>
+                      <span class="coin-name">Tether (USDT)</span>
+                    </div>
+                    <span class="alloc-pct">15%</span>
+                  </div>
+                  <div class="alloc-bar"><div class="alloc-fill alloc-usdt" style="width:15%"></div></div>
+                  <div class="alloc-value">≈ Rp 2.812.500</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ===== SECTION 3: FORM TAMBAH TRANSAKSI ===== -->
+        <section id="tambah-transaksi" class="section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Tambah Transaksi Baru</h2>
+              <p class="section-subtitle">Catat setiap transaksi crypto Anda dengan detail lengkap</p>
+            </div>
+          </div>
+          <div class="form-card">
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label class="form-label" for="txDate">Tanggal Transaksi <span class="required">*</span></label>
+                <input type="date" class="form-control" id="txDate" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="txAsset">Nama Aset <span class="required">*</span></label>
+                <select class="form-control" id="txAsset">
+                  <option value="">— Pilih Aset —</option>
+                  <option value="BTC">Bitcoin (BTC)</option>
+                  <option value="ETH">Ethereum (ETH)</option>
+                  <option value="SOL">Solana (SOL)</option>
+                  <option value="BNB">Binance Coin (BNB)</option>
+                  <option value="USDT">Tether (USDT)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="txType">Jenis Transaksi <span class="required">*</span></label>
+                <select class="form-control" id="txType">
+                  <option value="">— Pilih Jenis —</option>
+                  <option value="Buy">Buy</option>
+                  <option value="Sell">Sell</option>
+                  <option value="Deposit">Deposit</option>
+                  <option value="Withdraw">Withdraw</option>
+                  <option value="Staking Reward">Staking Reward</option>
+                  <option value="Transfer In">Transfer In</option>
+                  <option value="Transfer Out">Transfer Out</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="txAmount">Jumlah Crypto <span class="required">*</span></label>
+                <input type="number" class="form-control" id="txAmount" placeholder="Contoh: 0.005" step="any" min="0" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="txPrice">Harga per Koin (Rp) <span class="required">*</span></label>
+                <input type="number" class="form-control" id="txPrice" placeholder="Contoh: 850000000" min="0" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="txTotal">Total Modal (Rp)</label>
+                <input type="number" class="form-control" id="txTotal" placeholder="Otomatis terhitung" readonly />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="txFee">Fee Transaksi (Rp)</label>
+                <input type="number" class="form-control" id="txFee" placeholder="Contoh: 5000" min="0" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="txPlatform">Platform / Exchange</label>
+                <input type="text" class="form-control" id="txPlatform" placeholder="Contoh: Indodax, Tokocrypto" />
+              </div>
+
+              <div class="form-group form-group--full">
+                <label class="form-label" for="txNote">Catatan</label>
+                <textarea class="form-control form-textarea" id="txNote" placeholder="Tambahkan catatan opsional..."></textarea>
+              </div>
+
+            </div><!-- end form-grid -->
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="addTransaction()">💾 Simpan Transaksi</button>
+              <button class="btn btn-outline" onclick="resetForm()">🔄 Reset</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SECTION 4: RIWAYAT TRANSAKSI ===== -->
+        <section id="riwayat" class="section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Riwayat Transaksi</h2>
+              <p class="section-subtitle">Semua catatan transaksi crypto Anda</p>
+            </div>
+            <div class="section-actions">
+              <span class="badge badge--primary" id="txCount">8 Transaksi</span>
+              <button class="btn btn-outline btn-sm">⬇ Export</button>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Tanggal</th>
+                    <th>Aset</th>
+                    <th>Jenis</th>
+                    <th>Jumlah</th>
+                    <th>Harga</th>
+                    <th>Total</th>
+                    <th>Fee</th>
+                    <th>Platform</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="transactionBody">
+                  <!-- Diisi oleh JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SECTION 5: ASET SAYA ===== -->
+        <section id="aset-saya" class="section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Aset Saya</h2>
+              <p class="section-subtitle">Ringkasan kepemilikan aset crypto Anda</p>
+            </div>
+            <span class="badge badge--accent">4 Aset Aktif</span>
+          </div>
+          <div class="asset-grid">
+
+            <div class="asset-card">
+              <div class="asset-header">
+                <div class="asset-info">
+                  <div class="asset-icon asset-btc">₿</div>
+                  <div>
+                    <div class="asset-name">Bitcoin</div>
+                    <div class="asset-symbol">BTC</div>
+                  </div>
+                </div>
+                <span class="badge badge--success">+18.5%</span>
+              </div>
+              <div class="asset-stats">
+                <div class="stat">
+                  <span class="stat-label">Jumlah Dimiliki</span>
+                  <span class="stat-value">0.0088 BTC</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Avg. Buy Price</span>
+                  <span class="stat-value">Rp 852.272.727</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Nilai Sekarang</span>
+                  <span class="stat-value">Rp 7.500.000</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Profit / Loss</span>
+                  <span class="stat-value positive">+Rp 1.200.000</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="asset-card">
+              <div class="asset-header">
+                <div class="asset-info">
+                  <div class="asset-icon asset-eth">Ξ</div>
+                  <div>
+                    <div class="asset-name">Ethereum</div>
+                    <div class="asset-symbol">ETH</div>
+                  </div>
+                </div>
+                <span class="badge badge--success">+9.2%</span>
+              </div>
+              <div class="asset-stats">
+                <div class="stat">
+                  <span class="stat-label">Jumlah Dimiliki</span>
+                  <span class="stat-value">0.125 ETH</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Avg. Buy Price</span>
+                  <span class="stat-value">Rp 34.500.000</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Nilai Sekarang</span>
+                  <span class="stat-value">Rp 4.687.500</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Profit / Loss</span>
+                  <span class="stat-value positive">+Rp 375.000</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="asset-card">
+              <div class="asset-header">
+                <div class="asset-info">
+                  <div class="asset-icon asset-sol">◎</div>
+                  <div>
+                    <div class="asset-name">Solana</div>
+                    <div class="asset-symbol">SOL</div>
+                  </div>
+                </div>
+                <span class="badge badge--danger">-4.3%</span>
+              </div>
+              <div class="asset-stats">
+                <div class="stat">
+                  <span class="stat-label">Jumlah Dimiliki</span>
+                  <span class="stat-value">17.5 SOL</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Avg. Buy Price</span>
+                  <span class="stat-value">Rp 218.286</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Nilai Sekarang</span>
+                  <span class="stat-value">Rp 3.750.000</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Profit / Loss</span>
+                  <span class="stat-value negative">-Rp 170.000</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="asset-card">
+              <div class="asset-header">
+                <div class="asset-info">
+                  <div class="asset-icon asset-usdt">₮</div>
+                  <div>
+                    <div class="asset-name">Tether</div>
+                    <div class="asset-symbol">USDT</div>
+                  </div>
+                </div>
+                <span class="badge badge--neutral">Stabil</span>
+              </div>
+              <div class="asset-stats">
+                <div class="stat">
+                  <span class="stat-label">Jumlah Dimiliki</span>
+                  <span class="stat-value">175 USDT</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Avg. Buy Price</span>
+                  <span class="stat-value">Rp 16.000</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Nilai Sekarang</span>
+                  <span class="stat-value">Rp 2.812.500</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Profit / Loss</span>
+                  <span class="stat-value">Rp 0</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ===== SECTION 6: TARGET TABUNGAN ===== -->
+        <section id="target" class="section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Target Tabungan</h2>
+              <p class="section-subtitle">Pantau progres target investasi crypto Anda</p>
+            </div>
+            <span class="badge badge--warning">Dalam Progres</span>
+          </div>
+          <div class="target-card">
+            <div class="target-top">
+              <div class="target-info">
+                <div class="target-icon">🎯</div>
+                <div>
+                  <h3 class="target-name">Target Dana Investasi</h3>
+                  <p class="target-desc">Tujuan: Portofolio Crypto Diversified 2026</p>
+                </div>
+              </div>
+              <div class="target-actions">
+                <button class="btn btn-outline btn-sm">✏️ Edit Target</button>
+                <button class="btn btn-primary btn-sm">📋 Lihat Detail</button>
+              </div>
+            </div>
+
+            <div class="target-numbers">
+              <div class="target-stat">
+                <span class="tstat-label">Target Nominal</span>
+                <span class="tstat-value">Rp 30.000.000</span>
+              </div>
+              <div class="target-stat">
+                <span class="tstat-label">Nilai Sekarang</span>
+                <span class="tstat-value tstat-primary">Rp 18.750.000</span>
+              </div>
+              <div class="target-stat">
+                <span class="tstat-label">Sisa Target</span>
+                <span class="tstat-value tstat-warning">Rp 11.250.000</span>
+              </div>
+              <div class="target-stat">
+                <span class="tstat-label">Persentase</span>
+                <span class="tstat-value tstat-success">62.5%</span>
+              </div>
+            </div>
+
+            <div class="target-progress-wrap">
+              <div class="target-progress-bar">
+                <div class="target-progress-fill" style="width: 62.5%"></div>
+              </div>
+              <div class="target-progress-info">
+                <span>Rp 0</span>
+                <span class="target-eta">⏱ Estimasi tercapai dalam <strong>8 bulan</strong></span>
+                <span>Rp 30jt</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SECTION 7: LAPORAN ===== -->
+        <section id="laporan" class="section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Laporan Ringkas</h2>
+              <p class="section-subtitle">Ringkasan performa investasi bulan ini</p>
+            </div>
+            <span class="badge badge--primary">Mei 2026</span>
+          </div>
+          <div class="report-grid">
+            <div class="report-card">
+              <div class="report-icon">📝</div>
+              <div class="report-label">Laporan Bulan Ini</div>
+              <div class="report-value" id="reportTxCount">4 Transaksi</div>
+              <div class="report-sub">Total aktivitas di bulan ini</div>
+            </div>
+            <div class="report-card">
+              <div class="report-icon">📦</div>
+              <div class="report-label">Total DCA Bulan Ini</div>
+              <div class="report-value">Rp 2.000.000</div>
+              <div class="report-sub">↑ +33% dari bulan lalu</div>
+            </div>
+            <div class="report-card report-card--highlight">
+              <div class="report-icon">🏆</div>
+              <div class="report-label">Aset Terbaik</div>
+              <div class="report-value positive">BTC +18.5%</div>
+              <div class="report-sub">Performa terbaik bulan ini</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: PENGATURAN (placeholder) -->
+        <section id="pengaturan" class="section" style="display:none">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Pengaturan</h2>
+              <p class="section-subtitle">Konfigurasi aplikasi Anda</p>
+            </div>
+          </div>
+          <div class="form-card" style="text-align:center; padding: 60px;">
+            <div style="font-size:48px; margin-bottom:16px;">⚙️</div>
+            <h3 style="font-family:'Syne',sans-serif; margin-bottom:8px; color:var(--text);">Halaman Pengaturan</h3>
+            <p style="color:var(--text-muted); font-size:14px;">Fitur ini sedang dalam pengembangan.</p>
+          </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+          <p>© 2026 Crypto Savings Tracker. All rights reserved.</p>
+          <p class="footer-sub">Made with ❤️ for crypto enthusiasts Indonesia</p>
+        </footer>
+
+      </div><!-- end content-area -->
+    </main><!-- end main-content -->
+  </div><!-- end app-layout -->
+
+  <script src="js/index.js"></script>
+</body>
+</html>
